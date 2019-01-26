@@ -1,5 +1,5 @@
 package bluma.example.com.reversi;
 
 public enum Color {
-    Black,White
+    Empty,Black,White
 }
