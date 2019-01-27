@@ -1,27 +1,27 @@
 package bluma.example.com.reversi;
 
 public class BoardPosition {
-    private String horizontalPos;
-    private int verticalPos;
+    private int column;
+    private int row;
 
-    public BoardPosition(String horizontalPos, int verticalPos) {
-        this.horizontalPos = horizontalPos;
-        this.verticalPos = verticalPos;
+    public BoardPosition(int row, int column) {
+        this.column = column;
+        this.row = row;
     }
 
-    public String getHorizontalPos() {
-        return horizontalPos;
+    public int getColumn() {
+        return column;
     }
 
-    public void setHorizontalPos(String horizontalPos) {
-        this.horizontalPos = horizontalPos;
+    public void setColumn(int column) {
+        this.column = column;
     }
 
-    public int getVerticalPos() {
-        return verticalPos;
+    public int getRow() {
+        return row;
     }
 
-    public void setVerticalPos(int verticalPos) {
-        this.verticalPos = verticalPos;
+    public void setRow(int row) {
+        this.row = row;
     }
 }
