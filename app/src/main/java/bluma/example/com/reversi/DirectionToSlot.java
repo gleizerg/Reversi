@@ -49,4 +49,12 @@ public class DirectionToSlot {
     public void setBoardPositionOfWantedSlot(BoardPosition boardPositionOfWantedSlot) {
         this.boardPositionOfWantedSlot = boardPositionOfWantedSlot;
     }
+
+    public int getRowOfWantedSlot(){
+        return boardPositionOfWantedSlot.getRow();
+    }
+
+    public int getColumnOfWantedSlot(){
+        return boardPositionOfWantedSlot.getColumn();
+    }
 }

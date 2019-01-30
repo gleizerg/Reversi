@@ -18,15 +18,16 @@ public class MatchLogic {
             new DirectionToSlot(-1, 0),
             new DirectionToSlot(-1, -1),
     };
-    private BoardPosition seekToNorth, seekToNE, seekToEast, seekToSE, seekToSouth,
+    /*private BoardPosition seekToNorth, seekToNE, seekToEast, seekToSE, seekToSouth,
                             seekToSW, seekToWest, seekToNW;
-    private boolean isAtNorth, isAtNE, isAtEast, isAtSE, isAtSouth, isAtSW, isAtWest, isAtNW;
+    private boolean isAtNorth, isAtNE, isAtEast, isAtSE, isAtSouth, isAtSW, isAtWest, isAtNW;*/
 
     public MatchLogic() {
         matchBoard = MatchBoard.getMatchBoardInstance();
     }
 
-    public ArrayList<MatchBoardSlot> getLegalPositions() {
+    public ArrayList<MatchBoardSlot> getLegalPositions(Color colorForLegalPositions) {
+        setLegalPositions(colorForLegalPositions);
         return legalPositions;
     }
 
@@ -51,12 +52,7 @@ public class MatchLogic {
     public void updateMatchBoard(int row, int column, Color playedStoneColor){
         if(!updatedStones.isEmpty())
             updatedStones.clear();
-        if(!legalPositions.isEmpty())
-            legalPositions.clear();
         updateStones(row, column, playedStoneColor);
-        if(playedStoneColor == Color.Black)
-            setLegalPositions(Color.White);
-        else setLegalPositions(Color.Black);
     }
 
     private void updateStones(int row, int column, Color playedStoneColor) {
@@ -80,11 +76,6 @@ public class MatchLogic {
             updateToNW(new BoardPosition(--row, --column), playedStoneColor);*/
     }
 
-
-    private void setLegalPositions(Color currentPlayerStoneColor){
-
-    }
-
     private void allDirectionsCheck(int srcRow, int srcColumn, Color srcColor, Color dstColor){
         int xDirection, yDirection, rowTemp, columnTemp;
         initiateIsAtDirection();
@@ -106,10 +97,40 @@ public class MatchLogic {
     }
 
     private void allDirectionsUpdate(int srcRow, int srcColumn){
+        int dRow, dCol, xDirection, yDirection;
+        for(int i=0; i<8; i++){
+            if(vectors[i].isWantedSlotInDirection()){
+                dRow = vectors[i].getBoardPositionOfWantedSlot().getRow();
+                dCol = vectors[i].getBoardPositionOfWantedSlot().getColumn();
+                xDirection = vectors[i].getxDirection();
+                yDirection = vectors[i].getyDirection();
+                for(int tRow=srcRow, tCol=srcColumn; tRow!=dRow && tCol!=dCol; tRow+=yDirection, tCol+=xDirection) {
+                    updatedStones.add(matchBoard.getMatcBoardSlot(tRow, tCol));
+                    matchBoard.turnOverAtPosition(tRow, tCol);
+                }
+            }
+        }
+    }
+
+    private void setLegalPositions(Color currentPlayerStoneColor){
+        int sRow, sCol;
+        ArrayList<MatchBoardSlot> slotsWithOppositeColorNeighbors = matchBoard.getAllBlockedSlots(currentPlayerStoneColor);
+        if(!legalPositions.isEmpty())
+            legalPositions.clear();
+        for (MatchBoardSlot slotWithOppositeColorNeighbor:slotsWithOppositeColorNeighbors) {
+            sRow=slotWithOppositeColorNeighbor.getBoardPosition().getRow();
+            sCol=slotWithOppositeColorNeighbor.getBoardPosition().getColumn();
+            allDirectionsCheck(sRow, sCol, slotWithOppositeColorNeighbor.getStoneColor(), Color.Empty);
+            for(int i=0; i<8; i++) {
+                if (vectors[i].isWantedSlotInDirection())
+                    legalPositions.add(matchBoard.getMatcBoardSlot(vectors[i].getRowOfWantedSlot(),
+                            vectors[i].getColumnOfWantedSlot()));
+            }
+        }
 
     }
 
-    private boolean isSameColorAtNorth(int row, int column, Color playedStoneColor) {
+   /* private boolean isSameColorAtNorth(int row, int column, Color playedStoneColor) {
         isAtNorth = false;
         int rowTemp = row-1;
         if(rowTemp>=1){
@@ -302,7 +323,7 @@ public class MatchLogic {
             matchBoard.setMatchBoardSlotColor(row, i, color);
             updatedStones.add(matchBoard.getMatcBoardSlot(row, i));
         }
-    }
+    }*/
 
     private void initiateIsAtDirection(){
         for (DirectionToSlot vector: vectors) {
@@ -317,8 +338,5 @@ public class MatchLogic {
             return true;
     }
 
-    private boolean isStraightLineToSameColorStone(int row, int column, Color stoneColor){
-        return true;
-    }
 
 }

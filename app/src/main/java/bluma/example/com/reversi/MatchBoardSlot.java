@@ -21,4 +21,12 @@ public class MatchBoardSlot {
         return boardPosition;
     }
 
+    public int getBoardPositionRow(){
+        return boardPosition.getRow();
+    }
+
+    public int getBoardPositionColumn(){
+        return boardPosition.getColumn();
+    }
+
 }

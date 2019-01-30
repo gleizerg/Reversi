@@ -21,8 +21,9 @@ public class MatchController {
         matchLogic.configureSlotsToStartingPosition();
     }
 
-    public void updateMatchBoard(int row, int column, Color color){
+    public boolean updateMatchBoard(int row, int column, Color color){
         matchLogic.updateMatchBoard(row, column, color);
+        return(getUpdatedStones().isEmpty());//fix have to check if correct slot is selected
     }
 
     public ArrayList<MatchBoardSlot> getUpdatedStones(){
@@ -31,6 +32,14 @@ public class MatchController {
 
     public ArrayList<MatchBoardSlot> getLegalPositions(){
         return matchLogic.getLegalPositions();
+    }
+
+    public boolean gameOver(){
+
+    }
+
+    public boolean isAITurn(){
+
     }
 
 }

@@ -1,6 +1,7 @@
 package bluma.example.com.reversi;
 
 
+import java.util.ArrayList;
 
 public class MatchBoard {
     private MatchBoardSlot matchBoard[][];
@@ -39,31 +40,50 @@ public class MatchBoard {
         return false;
     }
 
+    public boolean turnOverAtPosition(int row, int column){
+        if(matchBoard[row][column].getStoneColor() == Color.Empty)
+            return false;
+        else{
+            if(matchBoard[row][column].getStoneColor() == Color.Black)
+                setMatchBoardSlotColor(row, column, Color.White);
+            else
+                setMatchBoardSlotColor(row, column, Color.Black);
+            return true;
+        }
+    }
+
     public boolean isEmptyAtPosition(int row, int column){
         return(matchBoard[row][column].getStoneColor() == Color.Empty);
     }
 
-    /*public MatchBoardSlot[][] getMatchBoard() {
-        return matchBoard;
-    }*/
+    public ArrayList<MatchBoardSlot> getAllBlockedSlots(Color color){
+        ArrayList<MatchBoardSlot> slotsWithOppositeColorNeighbors = new ArrayList<>();
+        for(int tRow=0; tRow<8; tRow++){
+            for(int tCol=0; tCol<8; tCol++){
+                if(getMatchBoardSlotColor(tRow, tCol)!=Color.Empty){
+                    if(countNeighbors(tRow, tCol, getReverseColor(color))>0)
+                        slotsWithOppositeColorNeighbors.add(getMatcBoardSlot(tRow, tCol));
+                }
+            }
+        }
 
-    /*public void initiateMatchBoard(){
-        clearMatchBoard();
-        configureSlotsToStartingPosition();
+        return slotsWithOppositeColorNeighbors;
     }
 
-
-
-    private void clearMatchBoard(){
-        for(int i=0; i<8; i++)
-            for(int j=0; j<8; j++)
-                matchBoard[i][j].setStoneColor(Color.Empty);
+    public Color getReverseColor(Color colorToReverse){
+        if(colorToReverse == Color.Black)
+            return Color.White;
+        else if(colorToReverse == Color.White)
+            return Color.Black;
+        else
+            return Color.Empty;
     }
 
-    private void configureSlotsToStartingPosition(){
-        matchBoard[3][3].setStoneColor(Color.White);
-        matchBoard[3][4].setStoneColor(Color.Black);
-        matchBoard[4][3].setStoneColor(Color.Black);
-        matchBoard[4][4].setStoneColor(Color.White);
-    }*/
+    private int countNeighbors(int row, int column, Color color){
+        int numOfNeighborsAtPosition = 0;
+
+
+        return numOfNeighborsAtPosition;
+    }
+
 }
