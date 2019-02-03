@@ -2,6 +2,7 @@ package bluma.example.com.reversi;
 
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MatchLogic {
     private MatchBoard matchBoard;
@@ -26,8 +27,7 @@ public class MatchLogic {
         matchBoard = MatchBoard.getMatchBoardInstance();
     }
 
-    public ArrayList<MatchBoardSlot> getLegalPositions(Color colorForLegalPositions) {
-        setLegalPositions(colorForLegalPositions);
+    public ArrayList<MatchBoardSlot> getLegalPositions() {
         return legalPositions;
     }
 
@@ -35,24 +35,58 @@ public class MatchLogic {
         return updatedStones;
     }
 
-    public void cleanMatchBoard(){
-        for(int i=0; i<8; i++)
-            for(int j=0; j<8; j++)
-                matchBoard.setMatchBoardSlotColor(i, j, Color.Empty);
-    }
-
     public void configureSlotsToStartingPosition(){
         matchBoard.setMatchBoardSlotColor(3, 3, Color.White);
         matchBoard.setMatchBoardSlotColor(3, 4, Color.Black);
         matchBoard.setMatchBoardSlotColor(4, 3, Color.Black);
         matchBoard.setMatchBoardSlotColor(4, 4, Color.White);
-        setLegalPositions(Color.Black);//must send current players color, not always black
     }
 
     public void updateMatchBoard(int row, int column, Color playedStoneColor){
         if(!updatedStones.isEmpty())
             updatedStones.clear();
         updateStones(row, column, playedStoneColor);
+        matchBoard.updateStoneBalance(updatedStones.size(), playedStoneColor);
+    }
+
+    public boolean setLegalPositions(Color currentPlayerStoneColor){
+        int sRow, sCol;
+        ArrayList<MatchBoardSlot> slotsWithOppositeColorNeighbors = matchBoard.getAllBlockedSlots(currentPlayerStoneColor);
+        if(!legalPositions.isEmpty())
+            legalPositions.clear();
+        for (MatchBoardSlot slotWithOppositeColorNeighbor:slotsWithOppositeColorNeighbors) {
+            sRow=slotWithOppositeColorNeighbor.getBoardPosition().getRow();
+            sCol=slotWithOppositeColorNeighbor.getBoardPosition().getColumn();
+            allDirectionsCheck(sRow, sCol, slotWithOppositeColorNeighbor.getStoneColor(), Color.Empty);
+            for(int i=0; i<8; i++) {
+                if (vectors[i].isWantedSlotInDirection())
+                    legalPositions.add(matchBoard.getMatcBoardSlot(vectors[i].getRowOfWantedSlot(),
+                            vectors[i].getColumnOfWantedSlot()));
+            }
+        }
+        if(legalPositions.isEmpty())
+            return false;
+        else
+            return true;
+    }
+
+    public boolean isValidPlay(BoardPosition position, boolean isAITurn){
+        boolean playIsValid = false;
+        if(!isAITurn){
+            if(matchBoard.isUnOccupiedSlot(position)){
+                for (MatchBoardSlot slot : legalPositions) {
+                    if(position.isSamePosition(slot.getBoardPosition()))
+                        playIsValid = true;
+                }
+            }
+        }
+        return playIsValid;
+    }
+
+    public BoardPosition getAIMove(){//todo
+        int amountOfAILegalPositions = legalPositions.size();
+        Random random = new Random();
+        return legalPositions.get(random.nextInt(amountOfAILegalPositions)).getBoardPosition();
     }
 
     private void updateStones(int row, int column, Color playedStoneColor) {
@@ -112,23 +146,19 @@ public class MatchLogic {
         }
     }
 
-    private void setLegalPositions(Color currentPlayerStoneColor){
-        int sRow, sCol;
-        ArrayList<MatchBoardSlot> slotsWithOppositeColorNeighbors = matchBoard.getAllBlockedSlots(currentPlayerStoneColor);
-        if(!legalPositions.isEmpty())
-            legalPositions.clear();
-        for (MatchBoardSlot slotWithOppositeColorNeighbor:slotsWithOppositeColorNeighbors) {
-            sRow=slotWithOppositeColorNeighbor.getBoardPosition().getRow();
-            sCol=slotWithOppositeColorNeighbor.getBoardPosition().getColumn();
-            allDirectionsCheck(sRow, sCol, slotWithOppositeColorNeighbor.getStoneColor(), Color.Empty);
-            for(int i=0; i<8; i++) {
-                if (vectors[i].isWantedSlotInDirection())
-                    legalPositions.add(matchBoard.getMatcBoardSlot(vectors[i].getRowOfWantedSlot(),
-                            vectors[i].getColumnOfWantedSlot()));
-            }
+    private void initiateIsAtDirection(){
+        for (DirectionToSlot vector: vectors) {
+            vector.setWantedSlotInDirection(false);
         }
-
     }
+
+    private boolean isValidPosition(int row, int column){
+        if((row > 7) || (row < 0) || (column > 7) || (column < 0))
+            return false;
+        else
+            return true;
+    }
+
 
    /* private boolean isSameColorAtNorth(int row, int column, Color playedStoneColor) {
         isAtNorth = false;
@@ -324,19 +354,5 @@ public class MatchLogic {
             updatedStones.add(matchBoard.getMatcBoardSlot(row, i));
         }
     }*/
-
-    private void initiateIsAtDirection(){
-        for (DirectionToSlot vector: vectors) {
-            vector.setWantedSlotInDirection(false);
-        }
-    }
-
-    private boolean isValidPosition(int row, int column){
-        if((row > 7) || (row < 0) || (column > 7) || (column < 0))
-            return false;
-        else
-            return true;
-    }
-
 
 }

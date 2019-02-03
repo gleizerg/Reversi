@@ -24,4 +24,11 @@ public class BoardPosition {
     public void setRow(int row) {
         this.row = row;
     }
+
+    public boolean isSamePosition(BoardPosition bPosition){
+        if((bPosition.row == this.row) && (bPosition.column == this.column))
+            return true;
+        else
+            return false;
+    }
 }

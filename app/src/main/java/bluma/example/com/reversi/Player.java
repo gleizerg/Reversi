@@ -3,13 +3,20 @@ package bluma.example.com.reversi;
 public class Player {
     private String playerName;
     private int score = 0;
-    private boolean isComputer = false;
+    private boolean isAI = false;
     private Color color;
 
-    public Player(String playerName, int score, boolean isComputer, Color color) {
+    public Player(String playerName, int score, boolean isAI, Color color) {
         this.playerName = playerName;
         this.score = score;
-        this.isComputer = isComputer;
+        this.isAI = isAI;
+        this.color = color;
+    }
+
+    public Player(String playerName, boolean isAI, Color color) {
+        this.playerName = playerName;
+        this.score = 0;
+        this.isAI = isAI;
         this.color = color;
     }
 
@@ -29,12 +36,12 @@ public class Player {
         this.score = score;
     }
 
-    public boolean isComputer() {
-        return isComputer;
+    public boolean isAI() {
+        return isAI;
     }
 
-    public void setComputer(boolean computer) {
-        isComputer = computer;
+    public void setAI(boolean AI) {
+        isAI = AI;
     }
 
     public Color getColor() {
