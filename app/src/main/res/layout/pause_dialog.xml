@@ -1,6 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/wood_background"
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <com.example.user.myapp.StrokeTextView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:text="Pause"
+        android:gravity="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="50sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/colorAccent"
+        android:text="Resume" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/colorAccent"
+        android:text="Settings" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="20dp" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:background="@color/colorAccent"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_refresh_black_24dp"
+            android:text="Restart" />
+
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:background="@color/colorAccent"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_exit_to_app_black_24dp"
+            android:text="Exit" />
+    </LinearLayout>
+</LinearLayout>
