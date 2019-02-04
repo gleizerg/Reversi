@@ -84,7 +84,7 @@ public class MatchBoard {
         ArrayList<MatchBoardSlot> slotsWithOppositeColorNeighbors = new ArrayList<>();
         for(int tRow=0; tRow<8; tRow++){
             for(int tCol=0; tCol<8; tCol++){
-                if(getMatchBoardSlotColor(tRow, tCol)!=Color.Empty){
+                if((getMatchBoardSlotColor(tRow, tCol)!=Color.Empty) && (getMatchBoardSlotColor(tRow, tCol) == color)){
                     if(countNeighbors(tRow, tCol, getReverseColor(color))>0)
                         slotsWithOppositeColorNeighbors.add(getMatcBoardSlot(tRow, tCol));
                 }

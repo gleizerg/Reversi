@@ -33,7 +33,7 @@ public class ActivityMatch extends AppCompatActivity {
         setContentView(R.layout.activity_match);
 
         matchController = MatchController.getMatchControllerInstance();
-        matchBoardLayout.findViewById(R.id.main_grid);
+        matchBoardLayout = findViewById(R.id.main_grid);
         for(currentRow=0; currentRow<8; currentRow++){
             for(currentCol=0; currentCol<8; currentCol++) {
                 imageViewBoard[currentRow][currentCol] = (ImageView) matchBoardLayout.getChildAt(getIndexAtPos(currentRow, currentCol));

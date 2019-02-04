@@ -1,6 +1,8 @@
 package bluma.example.com.reversi;
 
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -63,6 +65,9 @@ public class MatchLogic {
                     legalPositions.add(matchBoard.getMatcBoardSlot(vectors[i].getRowOfWantedSlot(),
                             vectors[i].getColumnOfWantedSlot()));
             }
+        }
+        for (MatchBoardSlot slot: legalPositions) {
+            Log.d("legalPos", "row "+slot.getBoardPositionRow()+"col "+slot.getBoardPositionColumn()+"\n");
         }
         if(legalPositions.isEmpty())
             return false;
