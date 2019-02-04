@@ -54,6 +54,9 @@ public class MatchLogic {
     public boolean setLegalPositions(Color currentPlayerStoneColor){
         int sRow, sCol;
         ArrayList<MatchBoardSlot> slotsWithOppositeColorNeighbors = matchBoard.getAllBlockedSlots(currentPlayerStoneColor);
+        /*for (MatchBoardSlot slot: slotsWithOppositeColorNeighbors) {//log
+            Log.d("oppositeColor", "row "+slot.getBoardPositionRow()+"col "+slot.getBoardPositionColumn()+"\n");
+        }*/
         if(!legalPositions.isEmpty())
             legalPositions.clear();
         for (MatchBoardSlot slotWithOppositeColorNeighbor:slotsWithOppositeColorNeighbors) {
@@ -65,10 +68,13 @@ public class MatchLogic {
                     legalPositions.add(matchBoard.getMatcBoardSlot(vectors[i].getRowOfWantedSlot(),
                             vectors[i].getColumnOfWantedSlot()));
             }
+           /* for (MatchBoardSlot slot: legalPositions) {//log
+                Log.d("legalPos", "row "+slot.getBoardPositionRow()+"col "+slot.getBoardPositionColumn()+"\n");
+            }*/
         }
-        for (MatchBoardSlot slot: legalPositions) {
-            Log.d("legalPos", "row "+slot.getBoardPositionRow()+"col "+slot.getBoardPositionColumn()+"\n");
-        }
+        //for (MatchBoardSlot slot: legalPositions) {//log
+        //    Log.d("legalPos", "row "+slot.getBoardPositionRow()+"col "+slot.getBoardPositionColumn()+"\n");
+        //}
         if(legalPositions.isEmpty())
             return false;
         else
@@ -116,23 +122,27 @@ public class MatchLogic {
     }
 
     private void allDirectionsCheck(int srcRow, int srcColumn, Color srcColor, Color dstColor){
-        int xDirection, yDirection, rowTemp, columnTemp;
+        int xDirection, yDirection, rowTemp, columnTemp, countOpposite;
         initiateIsAtDirection();
         for(int i = 0; i < 8; i++){
             xDirection = vectors[i].getxDirection();
             yDirection = vectors[i].getyDirection();
             rowTemp = srcRow + yDirection;
             columnTemp = srcColumn + xDirection;
-            for(; isValidPosition(rowTemp, columnTemp)
+            for(countOpposite=0; isValidPosition(rowTemp, columnTemp)
                     && matchBoard.isOppositeColorAtPosition(rowTemp, columnTemp, srcColor);
-                rowTemp+=yDirection, columnTemp+=xDirection);
-            if(isValidPosition(rowTemp, columnTemp)){
+                rowTemp+=yDirection, columnTemp+=xDirection, countOpposite++);
+            if(isValidPosition(rowTemp, columnTemp) && countOpposite>0){
                 if (matchBoard.getMatchBoardSlotColor(rowTemp, columnTemp) == dstColor) {
                     vectors[i].setWantedSlotInDirection(true);
                     vectors[i].setBoardPositionOfWantedSlot(new BoardPosition(rowTemp, columnTemp));
                 }
             }
         }
+        Log.d("allDirectionsCheckFor", "srcPos "+srcRow+" "+srcColumn+"\n");//log
+        for(int i=0; i<8; i++)//log
+            if(vectors[i].getBoardPositionOfWantedSlot() != null)
+            Log.d("allDirectionsCheck", "dstPos "+i+" "+vectors[i].getRowOfWantedSlot()+" "+vectors[i].getColumnOfWantedSlot()+"\n");
     }
 
     private void allDirectionsUpdate(int srcRow, int srcColumn){
