@@ -22,10 +22,10 @@ public class ActivityMatch extends AppCompatActivity {
     LinearLayout timerLayout;
     GridLayout matchBoardLayout;
     ImageView startTimer;
-    ImageView[][] imageViewBoard = new ImageView[8][8];
+    static ImageView[][] imageViewBoard = new ImageView[8][8];
     int currentRow, currentCol;
     ArrayList<MatchBoardSlot> legalPositions;
-    AnimationDrawable flipTheSlotAnimation;
+    static AnimationDrawable flipTheSlotAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,29 +42,12 @@ public class ActivityMatch extends AppCompatActivity {
                     private final int col = currentCol;
                     @Override
                     public void onClick(View view) {
-                        if(matchController.updateMatchBoard(row, col)) {//match board updated and appropriate stones turned over
-                            ((ImageView)view).setImageResource(R.drawable.gb);//set the stone on the board
-                            flipSlots();
-                        }
+                        matchController.playMove(new BoardPosition(row, col));
                     }
                 });
             }
         }
-        matchController.initiateMatchBoard();
-        //show starting match state
-        while(!matchController.gameOver()){
-            if(!matchController.isAITurn()){
-                legalPositions = matchController.getLegalPositions();
-                for (MatchBoardSlot legalSlot: legalPositions) {
-                    imageViewBoard[legalSlot.getBoardPositionRow]
-                            [legalSlot.getBoardPositionColumn]
-                            .setImageResource(R.drawable.red_dot);
-                }
-            }
-        }
-        findViewByIflipper = imageViewBoard[stonesToFlip.getBoardPositionRow()]
-                [stonesToFlip.getBoardPositionColumn()].setImageResource
-                (R.drawable.black_to_white_flip);
+        matchController.startMatch("Meir", false, Color.Black, "AI", true);//todo must get from intent
         startTimer =findViewById(R.id.start_timer);
         timerLayout = findViewById(R.id.timer_layout);
         Switch switchBtn = findViewById(R.id.switch_btn);
@@ -72,6 +55,16 @@ public class ActivityMatch extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 timerLayout.setVisibility(b ? View.VISIBLE : View.INVISIBLE);
+            }
+        });
+
+        ImageButton pauseBtn = findViewById(R.id.pause_btn);
+        pauseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ActivityMatch.this);
+                View dialogView = getLayoutInflater().inflate(R.layout.pause_dialog, null);
+                builder.setView(dialogView).show();
             }
         });
         /*findViewById(R.id.a1).setOnClickListener(this);
@@ -146,18 +139,57 @@ public class ActivityMatch extends AppCompatActivity {
         findViewById(R.id.h7).setOnClickListener(this);
         findViewById(R.id.h8).setOnClickListener(this);*/
 
-        ImageButton pauseBtn = findViewById(R.id.pause_btn);
-        pauseBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                View dialogView = getLayoutInflater().inflate(R.layout.pause_dialog, null);
-                builder.setView(dialogView).show();
-            }
-        });
     }
 
-    @Override
+    private int getIndexAtPos(int row, int col){
+        int indexAtPosition = 0;
+
+        indexAtPosition = (row*8) + col;
+        return indexAtPosition;
+    }
+
+    public static void updateSlotsOnDisplay(BoardPosition position, ArrayList<MatchBoardSlot> slotsToUpdate, Color turn){
+        ImageView flipper;
+        flipper = imageViewBoard[position.getRow()][position.getColumn()];
+        if(turn == Color.Black)
+            flipper.setImageResource(R.drawable.gb);
+        else
+            flipper.setImageResource(R.drawable.gw);
+        for (MatchBoardSlot stoneToFlip: slotsToUpdate) {
+            flipper = imageViewBoard[stoneToFlip.getBoardPositionRow()][stoneToFlip.getBoardPositionColumn()];
+            if(turn == Color.Black)
+                flipper.setImageResource(R.drawable.white_to_black_flip);
+            else
+                flipper.setImageResource(R.drawable.black_to_white_flip);
+            flipTheSlotAnimation = (AnimationDrawable)flipper.getDrawable();
+            flipTheSlotAnimation.start();
+        }
+
+    }//todo
+
+    public static void displayLegalPositions(ArrayList<MatchBoardSlot> legalPositions){
+        ImageView position;
+        for (MatchBoardSlot legalSlot: legalPositions) {
+            position = imageViewBoard[legalSlot.getBoardPositionRow()][legalSlot.getBoardPositionColumn()];
+            position.setImageResource(R.drawable.red_dot);
+        }
+    }//todo
+
+    public static void removeLegalPositions(ArrayList<MatchBoardSlot> legalPositions){
+        ImageView position;
+        for (MatchBoardSlot legalSlot: legalPositions) {
+            position = imageViewBoard[legalSlot.getBoardPositionRow()][legalSlot.getBoardPositionColumn()];
+            position.setImageResource(android.R.color.transparent);
+        }
+    }//todo
+
+    public static void displaySkippedTurnMessage(Color turnSkipped){
+
+    }//todo
+
+    public static void initiateGameOverProcess(){}//todo
+
+    /*@Override
     public void onClick(final View view) {
         //Toast.makeText(this, "you cant move there", Toast.LENGTH_SHORT).show();
         AnimationDrawable animationDrawable1,animationDrawable2;
@@ -168,7 +200,7 @@ public class ActivityMatch extends AppCompatActivity {
                 animationDrawable1.start();
 
                 //animation(R.id.a1);
-        /*        ObjectAnimator invisible = ObjectAnimator.ofFloat(R.id.a1, "scaleX", 1f, 0f).setDuration(10000);
+        *//*        ObjectAnimator invisible = ObjectAnimator.ofFloat(R.id.a1, "scaleX", 1f, 0f).setDuration(10000);
                 final ObjectAnimator visible = ObjectAnimator.ofFloat(R.id.a1, "scaleX", 0f, 1f).setDuration(10000);
                 invisible.addListener(new AnimatorListenerAdapter() {
                     @Override
@@ -179,7 +211,7 @@ public class ActivityMatch extends AppCompatActivity {
                         visible.start();
                     }
                 });
-                invisible.start();*/
+                invisible.start();*//*
                 break;
             case R.id.a2:
                 ImageView a2 = findViewById(R.id.a2);
@@ -319,64 +351,6 @@ public class ActivityMatch extends AppCompatActivity {
                 Toast.makeText(this, "you can't move there!", Toast.LENGTH_SHORT).show();
                 break;
         }
-    }
-
-    private int getIndexAtPos(int row, int col){
-        int indexAtPosition = 0;
-
-        indexAtPosition = (row*8) + col;
-        return indexAtPosition;
-    }
-
-    private void flipSlots(){
-        ImageView flipper;
-        ArrayList<MatchBoardSlot> stonesToFlip;
-        stonesToFlip = matchController.getUpdatedStones;
-        for (MatchBoardSlot stoneToFlip: stonesToFlip) {
-            if(stoneToFlip.getStoneColor() == Color.Black)
-                flipper = imageViewBoard[stonesToFlip.getBoardPositionRow()]
-                        [stonesToFlip.getBoardPositionColumn()].setImageResource
-                        (R.drawable.black_to_white_flip);
-            else
-                flipper = imageViewBoard[stonesToFlip.getBoardPositionRow()]
-                        [stonesToFlip.getBoardPositionColumn()].setImageResource
-                        (R.drawable.white_to_black_flip);
-            flipTheSlotAnimation = (AnimationDrawable)flipper.getDrawable();
-            flipTheSlotAnimation.start();
-        }
-    }
-    public void animation(final int id) {
-/*        ObjectAnimator invisible = ObjectAnimator.ofFloat(id, "scaleX", 1f, 0f).setDuration(1000);
-        final ObjectAnimator visible = ObjectAnimator.ofFloat(id, "scaleX", 0f, 1f).setDuration(1000);
-        invisible.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                id.setImageResource(R.drawable.aw);
-                visible.start();
-            }
-        });
-        invisible.start();*/
-    }
-
-    public static void updateSlotsOnDisplay(BoardPosition position, ArrayList<MatchBoardSlot> slotsToUpdate, Color turn){}//todo
-    
-    public static void displayLegalPositions(ArrayList<MatchBoardSlot> legalPositions){}//todo
-
-    public static void displaySkippedTurnMessage(Color turnSkipped){}//todo
-
-    public static void initiateGameOverProcess(){}//todo
-
-
-
-    /*
-
-    anonym class{
-        if(notEndOfGame){
-            matchController.playMove(position);
-
-
-     */
-
+    }*/
 
 }

@@ -90,8 +90,7 @@
             android:layout_height="45dp"
             android:layout_row="0"
             android:layout_column="0"
-            android:background="@drawable/shape_im"
-            android:src="@drawable/white_to_black_flip" />
+            android:background="@drawable/shape_im" />
 
         <ImageView
             android:id="@+id/a2"
@@ -99,8 +98,7 @@
             android:layout_height="45dp"
             android:layout_row="0"
             android:layout_column="1"
-            android:background="@drawable/shape_im"
-            android:src="@drawable/gb" />
+            android:background="@drawable/shape_im" />
 
         <ImageView
             android:id="@+id/a3"
@@ -308,7 +306,8 @@
             android:layout_height="45dp"
             android:layout_row="3"
             android:layout_column="3"
-            android:background="@drawable/shape_im" />
+            android:background="@drawable/shape_im"
+            android:src="@drawable/gw"/>
 
         <ImageView
             android:id="@+id/d5"
@@ -316,7 +315,8 @@
             android:layout_height="45dp"
             android:layout_row="3"
             android:layout_column="4"
-            android:background="@drawable/shape_im" />
+            android:background="@drawable/shape_im"
+            android:src="@drawable/gb"/>
 
         <ImageView
             android:id="@+id/d6"
@@ -372,7 +372,8 @@
             android:layout_height="45dp"
             android:layout_row="4"
             android:layout_column="3"
-            android:background="@drawable/shape_im" />
+            android:background="@drawable/shape_im"
+            android:src="@drawable/gb"/>
 
         <ImageView
             android:id="@+id/e5"
@@ -380,7 +381,8 @@
             android:layout_height="45dp"
             android:layout_row="4"
             android:layout_column="4"
-            android:background="@drawable/shape_im" />
+            android:background="@drawable/shape_im"
+            android:src="@drawable/gw"/>
 
         <ImageView
             android:id="@+id/e6"

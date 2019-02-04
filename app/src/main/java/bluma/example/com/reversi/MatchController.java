@@ -86,6 +86,7 @@ public class MatchController {
 
     private void playUser(BoardPosition position){
         matchLogic.updateMatchBoard(position.getRow(), position.getColumn(), turn);
+        ActivityMatch.removeLegalPositions(matchLogic.getLegalPositions());
         ActivityMatch.updateSlotsOnDisplay(position, matchLogic.getUpdatedStones(), turn);
     }
 
