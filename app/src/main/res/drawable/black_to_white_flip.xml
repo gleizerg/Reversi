@@ -3,23 +3,23 @@
     android:oneshot="true">
     <item
         android:drawable="@drawable/aw"
-        android:duration="10" />
+        android:duration="30" />
     <item
         android:drawable="@drawable/bw"
-        android:duration="10" />
+        android:duration="30" />
     <item
         android:drawable="@drawable/cw"
-        android:duration="10" />
+        android:duration="30" />
     <item
         android:drawable="@drawable/dw"
-        android:duration="10" />
+        android:duration="30" />
     <item
         android:drawable="@drawable/ew"
-        android:duration="10" />
+        android:duration="30" />
     <item
         android:drawable="@drawable/fw"
-        android:duration="10" />
+        android:duration="30" />
     <item
         android:drawable="@drawable/gw"
-        android:duration="10"/>
+        android:duration="30"/>
 </animation-list>

@@ -7,6 +7,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.GridLayout;
@@ -24,7 +25,6 @@ public class ActivityMatch extends AppCompatActivity {
     ImageView startTimer;
     static ImageView[][] imageViewBoard = new ImageView[8][8];
     int currentRow, currentCol;
-    ArrayList<MatchBoardSlot> legalPositions;
     static AnimationDrawable flipTheSlotAnimation;
 
     @Override
@@ -67,78 +67,6 @@ public class ActivityMatch extends AppCompatActivity {
                 builder.setView(dialogView).show();
             }
         });
-        /*findViewById(R.id.a1).setOnClickListener(this);
-        findViewById(R.id.a2).setOnClickListener(this);
-        findViewById(R.id.a3).setOnClickListener(this);
-        findViewById(R.id.a4).setOnClickListener(this);
-        findViewById(R.id.a5).setOnClickListener(this);
-        findViewById(R.id.a6).setOnClickListener(this);
-        findViewById(R.id.a7).setOnClickListener(this);
-        findViewById(R.id.a8).setOnClickListener(this);
-
-        findViewById(R.id.b1).setOnClickListener(this);
-        findViewById(R.id.b2).setOnClickListener(this);
-        findViewById(R.id.b3).setOnClickListener(this);
-        findViewById(R.id.b4).setOnClickListener(this);
-        findViewById(R.id.b5).setOnClickListener(this);
-        findViewById(R.id.b6).setOnClickListener(this);
-        findViewById(R.id.b7).setOnClickListener(this);
-        findViewById(R.id.b8).setOnClickListener(this);
-
-        findViewById(R.id.c1).setOnClickListener(this);
-        findViewById(R.id.c2).setOnClickListener(this);
-        findViewById(R.id.c3).setOnClickListener(this);
-        findViewById(R.id.c4).setOnClickListener(this);
-        findViewById(R.id.c5).setOnClickListener(this);
-        findViewById(R.id.c6).setOnClickListener(this);
-        findViewById(R.id.c7).setOnClickListener(this);
-        findViewById(R.id.c8).setOnClickListener(this);
-
-        findViewById(R.id.d1).setOnClickListener(this);
-        findViewById(R.id.d2).setOnClickListener(this);
-        findViewById(R.id.d3).setOnClickListener(this);
-        findViewById(R.id.d4).setOnClickListener(this);
-        findViewById(R.id.d5).setOnClickListener(this);
-        findViewById(R.id.d6).setOnClickListener(this);
-        findViewById(R.id.d7).setOnClickListener(this);
-        findViewById(R.id.d8).setOnClickListener(this);
-
-        findViewById(R.id.e1).setOnClickListener(this);
-        findViewById(R.id.e2).setOnClickListener(this);
-        findViewById(R.id.e3).setOnClickListener(this);
-        findViewById(R.id.e4).setOnClickListener(this);
-        findViewById(R.id.e5).setOnClickListener(this);
-        findViewById(R.id.e6).setOnClickListener(this);
-        findViewById(R.id.e7).setOnClickListener(this);
-        findViewById(R.id.e8).setOnClickListener(this);
-
-        findViewById(R.id.f1).setOnClickListener(this);
-        findViewById(R.id.f2).setOnClickListener(this);
-        findViewById(R.id.f3).setOnClickListener(this);
-        findViewById(R.id.f4).setOnClickListener(this);
-        findViewById(R.id.f5).setOnClickListener(this);
-        findViewById(R.id.f6).setOnClickListener(this);
-        findViewById(R.id.f7).setOnClickListener(this);
-        findViewById(R.id.f8).setOnClickListener(this);
-
-        findViewById(R.id.g1).setOnClickListener(this);
-        findViewById(R.id.g2).setOnClickListener(this);
-        findViewById(R.id.g3).setOnClickListener(this);
-        findViewById(R.id.g4).setOnClickListener(this);
-        findViewById(R.id.g5).setOnClickListener(this);
-        findViewById(R.id.g6).setOnClickListener(this);
-        findViewById(R.id.g7).setOnClickListener(this);
-        findViewById(R.id.g8).setOnClickListener(this);
-
-        findViewById(R.id.h1).setOnClickListener(this);
-        findViewById(R.id.h2).setOnClickListener(this);
-        findViewById(R.id.h3).setOnClickListener(this);
-        findViewById(R.id.h4).setOnClickListener(this);
-        findViewById(R.id.h5).setOnClickListener(this);
-        findViewById(R.id.h6).setOnClickListener(this);
-        findViewById(R.id.h7).setOnClickListener(this);
-        findViewById(R.id.h8).setOnClickListener(this);*/
-
     }
 
     private int getIndexAtPos(int row, int col){
@@ -165,192 +93,23 @@ public class ActivityMatch extends AppCompatActivity {
             flipTheSlotAnimation.start();
         }
 
-    }//todo
+    }
 
     public static void displayLegalPositions(ArrayList<MatchBoardSlot> legalPositions){
-        ImageView position;
         for (MatchBoardSlot legalSlot: legalPositions) {
-            position = imageViewBoard[legalSlot.getBoardPositionRow()][legalSlot.getBoardPositionColumn()];
-            position.setImageResource(R.drawable.red_dot);
+            imageViewBoard[legalSlot.getBoardPositionRow()][legalSlot.getBoardPositionColumn()].setImageResource(R.drawable.white_dot);
         }
-    }//todo
+    }
 
     public static void removeLegalPositions(ArrayList<MatchBoardSlot> legalPositions){
-        ImageView position;
-        for (MatchBoardSlot legalSlot: legalPositions) {
-            position = imageViewBoard[legalSlot.getBoardPositionRow()][legalSlot.getBoardPositionColumn()];
-            position.setImageResource(android.R.color.transparent);
+        for (MatchBoardSlot legalSlotToRemove: legalPositions) {
+            imageViewBoard[legalSlotToRemove.getBoardPositionRow()][legalSlotToRemove.getBoardPositionColumn()]
+                    .setImageResource(0);
         }
-    }//todo
+    }
 
-    public static void displaySkippedTurnMessage(Color turnSkipped){
-
-    }//todo
+    public static void displaySkippedTurnMessage(Color turnSkipped){}//todo
 
     public static void initiateGameOverProcess(){}//todo
-
-    /*@Override
-    public void onClick(final View view) {
-        //Toast.makeText(this, "you cant move there", Toast.LENGTH_SHORT).show();
-        AnimationDrawable animationDrawable1,animationDrawable2;
-        switch (view.getId()) {
-            case R.id.a1:
-                ImageView a1 = findViewById(R.id.a1);
-                animationDrawable1 = (AnimationDrawable)a1.getDrawable();
-                animationDrawable1.start();
-
-                //animation(R.id.a1);
-        *//*        ObjectAnimator invisible = ObjectAnimator.ofFloat(R.id.a1, "scaleX", 1f, 0f).setDuration(10000);
-                final ObjectAnimator visible = ObjectAnimator.ofFloat(R.id.a1, "scaleX", 0f, 1f).setDuration(10000);
-                invisible.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        ImageView a1 = findViewById(R.id.a1);
-                        a1.setImageResource(R.drawable.aw);
-                        visible.start();
-                    }
-                });
-                invisible.start();*//*
-                break;
-            case R.id.a2:
-                ImageView a2 = findViewById(R.id.a2);
-                a2.setImageResource(R.drawable.black_to_white_flip);
-                animationDrawable2 = (AnimationDrawable)a2.getDrawable();
-                animationDrawable2.start();
-                break;
-            case R.id.a3:
-
-                break;
-            case R.id.a4:
-                break;
-            case R.id.a5:
-                break;
-            case R.id.a6:
-                break;
-            case R.id.a7:
-                break;
-            case R.id.a8:
-                break;
-            case R.id.b1:
-                break;
-            case R.id.b2:
-                break;
-            case R.id.b3:
-                break;
-            case R.id.b4:
-                break;
-            case R.id.b5:
-                break;
-            case R.id.b6:
-                break;
-            case R.id.b7:
-                break;
-            case R.id.b8:
-                break;
-            case R.id.c1:
-                break;
-            case R.id.c2:
-                break;
-            case R.id.c3:
-                break;
-            case R.id.c4:
-                break;
-            case R.id.c5:
-                break;
-            case R.id.c6:
-                break;
-            case R.id.c7:
-                break;
-            case R.id.c8:
-                break;
-            case R.id.d1:
-                break;
-            case R.id.d2:
-                break;
-            case R.id.d3:
-                break;
-            case R.id.d4:
-                break;
-            case R.id.d5:
-                break;
-            case R.id.d6:
-                break;
-            case R.id.d7:
-                break;
-            case R.id.d8:
-                break;
-            case R.id.e1:
-                break;
-            case R.id.e2:
-                break;
-            case R.id.e3:
-                break;
-            case R.id.e4:
-                break;
-            case R.id.e5:
-                break;
-            case R.id.e6:
-                break;
-            case R.id.e7:
-                break;
-            case R.id.e8:
-                break;
-            case R.id.f1:
-                break;
-            case R.id.f2:
-                break;
-            case R.id.f3:
-                break;
-            case R.id.f4:
-                break;
-            case R.id.f5:
-                break;
-            case R.id.f6:
-                break;
-            case R.id.f7:
-                break;
-            case R.id.f8:
-                break;
-            case R.id.g1:
-                break;
-            case R.id.g2:
-                break;
-            case R.id.g3:
-                break;
-            case R.id.g4:
-                break;
-            case R.id.g5:
-                break;
-            case R.id.g6:
-                break;
-            case R.id.g7:
-                break;
-            case R.id.g8:
-                break;
-            case R.id.h1:
-                break;
-            case R.id.h2:
-                break;
-            case R.id.h3:
-                Toast.makeText(this, "you can't move there!", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.h4:
-                Toast.makeText(this, "you can't move there!", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.h5:
-                Toast.makeText(this, "you can't move there!", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.h6:
-                Toast.makeText(this, "you can't move there!", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.h7:
-                Toast.makeText(this, "you can't move there!", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.h8:
-                Toast.makeText(this, "you can't move there!", Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }*/
 
 }

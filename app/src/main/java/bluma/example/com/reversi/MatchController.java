@@ -42,7 +42,7 @@ public class MatchController {
             turn = matchBoard.getReverseColor(turn);
         }
         matchLogic.setLegalPositions(turn);
-        showLegalPositions();
+        showLegalPositions();//undo
         nextTurnToSkip = false;
     }
 
@@ -57,7 +57,7 @@ public class MatchController {
                     nextTurnToSkip = true;
                     turn = matchBoard.getReverseColor(turn);
                     matchLogic.setLegalPositions(turn);
-                    showLegalPositions();
+                    showLegalPositions();//undo
                 }
                 if (!nextTurnToSkip) {
                     if (isAIInTheMatch) {
@@ -66,7 +66,7 @@ public class MatchController {
                            turn = matchBoard.getReverseColor(turn);
                            if (matchLogic.setLegalPositions(turn)) {
                                nextTurnToSkip = false;
-                               showLegalPositions();
+                               showLegalPositions();//undo
                            }
                            else {
                                nextTurnToSkip = true;
@@ -85,7 +85,7 @@ public class MatchController {
     }
 
     private void playUser(BoardPosition position){
-        matchLogic.updateMatchBoard(position.getRow(), position.getColumn(), turn);
+        matchLogic.updateMatchBoard(position.getRow(), position.getColumn(), turn, matchLogic.getDirection(position));
         ActivityMatch.removeLegalPositions(matchLogic.getLegalPositions());
         ActivityMatch.updateSlotsOnDisplay(position, matchLogic.getUpdatedStones(), turn);
     }
@@ -93,7 +93,7 @@ public class MatchController {
     private void playAI(){
         BoardPosition AIMove;
         AIMove = getAIMove();
-        matchLogic.updateMatchBoard(AIMove.getRow(), AIMove.getColumn(), turn);
+        matchLogic.updateMatchBoard(AIMove.getRow(), AIMove.getColumn(), turn, matchLogic.getDirection(AIMove));
         ActivityMatch.updateSlotsOnDisplay(AIMove, matchLogic.getUpdatedStones(), turn);
     }
 
@@ -136,19 +136,6 @@ public class MatchController {
     private void gameOver(){
         ActivityMatch.initiateGameOverProcess();
     }
-
-    /*public boolean updateMatchBoard(int row, int column, Color color){
-        matchLogic.updateMatchBoard(row, column, color);
-        return(getUpdatedStones().isEmpty());//fix have to check if correct slot is selected
-    }
-
-    public ArrayList<MatchBoardSlot> getUpdatedStones(){
-        return matchLogic.getUpdatedStones();
-    }*/
-
-    /*public ArrayList<MatchBoardSlot> getLegalPositions(Color currentTurnColor){
-        return matchLogic.getLegalPositions(currentTurnColor);
-    }*/
 
     public int getAmountOfBlackSlots() {
         return matchBoard.getAmountOfBlackSlots();

@@ -112,12 +112,12 @@ public class MatchBoard {
 
     public void updateStoneBalance(int amountToReverse, Color playedColor){
         if(playedColor == Color.White){
-            amountOfWhiteSlots += amountToReverse;
+            amountOfWhiteSlots += (amountToReverse + 1);
             amountOfBlackSlots -= amountToReverse;
         }
         else{
             amountOfWhiteSlots -= amountToReverse;
-            amountOfBlackSlots += amountToReverse;
+            amountOfBlackSlots += (amountToReverse + 1);
         }
     }
 

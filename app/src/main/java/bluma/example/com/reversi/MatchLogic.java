@@ -1,6 +1,7 @@
 package bluma.example.com.reversi;
 
 
+import android.graphics.Path;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -44,11 +45,28 @@ public class MatchLogic {
         matchBoard.setMatchBoardSlotColor(4, 4, Color.White);
     }
 
-    public void updateMatchBoard(int row, int column, Color playedStoneColor){
+    public void updateMatchBoard(int row, int column, Color playedStoneColor, int direction){
         if(!updatedStones.isEmpty())
             updatedStones.clear();
-        updateStones(row, column, playedStoneColor);
+        matchBoard.setMatchBoardSlotColor(row, column, playedStoneColor);
+        updateStones(row, column, playedStoneColor, direction);
+        StringBuilder boardRow = new StringBuilder();
+        boardRow.append("printing board:\n" + playedStoneColor + "\n");
+        for(int i=0; i<8; i++) {
+            for(int j=0; j<8; j++) {
+                if (matchBoard.getMatchBoardSlotColor(i, j) == Color.Empty)
+                    boardRow.append('-');
+                else if(matchBoard.getMatchBoardSlotColor(i, j) == Color.Black)
+                    boardRow.append('X');
+                else
+                    boardRow.append('O');
+            }
+            boardRow.append('\n');
+        }
         matchBoard.updateStoneBalance(updatedStones.size(), playedStoneColor);
+        Log.d("boardPrint", boardRow.toString()+"\n"+matchBoard.getAmountOfBlackSlots()+" "+
+                matchBoard.getAmountOfWhiteSlots());
+
     }
 
     public boolean setLegalPositions(Color currentPlayerStoneColor){
@@ -100,7 +118,8 @@ public class MatchLogic {
         return legalPositions.get(random.nextInt(amountOfAILegalPositions)).getBoardPosition();
     }
 
-    private void updateStones(int row, int column, Color playedStoneColor) {
+    private void updateStones(int row, int column, Color playedStoneColor, int direction) {
+        //updateDirection(row, column, playedStoneColor, direction);
         allDirectionsCheck(row, column, playedStoneColor, playedStoneColor);
         allDirectionsUpdate(row, column);
         /*if(isSameColorAtNorth(row, column, playedStoneColor))
@@ -153,10 +172,24 @@ public class MatchLogic {
                 dCol = vectors[i].getBoardPositionOfWantedSlot().getColumn();
                 xDirection = vectors[i].getxDirection();
                 yDirection = vectors[i].getyDirection();
-                for(int tRow=srcRow, tCol=srcColumn; tRow!=dRow && tCol!=dCol; tRow+=yDirection, tCol+=xDirection) {
+                for(int tRow=srcRow+yDirection, tCol=srcColumn+xDirection; tRow!=dRow || tCol!=dCol; tRow+=yDirection, tCol+=xDirection) {
                     updatedStones.add(matchBoard.getMatcBoardSlot(tRow, tCol));
                     matchBoard.turnOverAtPosition(tRow, tCol);
                 }
+            }
+        }
+    }
+
+    private void updateDirection(int srcRow, int srcColumn, Color playedStone, int direction){
+        int dRow, dCol, xDirection, yDirection;
+        if(direction>=0) {
+            dRow = vectors[direction].getBoardPositionOfWantedSlot().getRow();
+            dCol = vectors[direction].getBoardPositionOfWantedSlot().getColumn();
+            xDirection = vectors[direction].getxDirection();
+            yDirection = vectors[direction].getyDirection();
+            for (int tRow = srcRow, tCol = srcColumn; tRow != dRow && tCol != dCol; tRow += yDirection, tCol += xDirection) {
+                updatedStones.add(matchBoard.getMatcBoardSlot(tRow, tCol));
+                matchBoard.turnOverAtPosition(tRow, tCol);
             }
         }
     }
@@ -174,7 +207,15 @@ public class MatchLogic {
             return true;
     }
 
-
+    public int getDirection(BoardPosition position){
+        for(int i=0; i<8; i++){
+            if(vectors[i].getBoardPositionOfWantedSlot() != null) {
+                if (position.isSamePosition(vectors[i].getBoardPositionOfWantedSlot()))
+                    return i;
+            }
+        }
+        return -1;
+    }
    /* private boolean isSameColorAtNorth(int row, int column, Color playedStoneColor) {
         isAtNorth = false;
         int rowTemp = row-1;
