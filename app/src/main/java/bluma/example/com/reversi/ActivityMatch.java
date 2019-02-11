@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class ActivityMatch extends AppCompatActivity {
     MatchController matchController;
@@ -25,7 +27,6 @@ public class ActivityMatch extends AppCompatActivity {
     ImageView startTimer;
     static ImageView[][] imageViewBoard = new ImageView[8][8];
     int currentRow, currentCol;
-    static AnimationDrawable flipTheSlotAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,16 +84,7 @@ public class ActivityMatch extends AppCompatActivity {
             flipper.setImageResource(R.drawable.gb);
         else
             flipper.setImageResource(R.drawable.gw);
-        for (MatchBoardSlot stoneToFlip: slotsToUpdate) {
-            flipper = imageViewBoard[stoneToFlip.getBoardPositionRow()][stoneToFlip.getBoardPositionColumn()];
-            if(turn == Color.Black)
-                flipper.setImageResource(R.drawable.white_to_black_flip);
-            else
-                flipper.setImageResource(R.drawable.black_to_white_flip);
-            flipTheSlotAnimation = (AnimationDrawable)flipper.getDrawable();
-            flipTheSlotAnimation.start();
-        }
-
+        flipTheStones(slotsToUpdate, turn);
     }
 
     public static void displayLegalPositions(ArrayList<MatchBoardSlot> legalPositions){
@@ -111,5 +103,19 @@ public class ActivityMatch extends AppCompatActivity {
     public static void displaySkippedTurnMessage(Color turnSkipped){}//todo
 
     public static void initiateGameOverProcess(){}//todo
+
+    private static void flipTheStones(ArrayList<MatchBoardSlot> slotsToUpdate, Color turn){
+        AnimationDrawable flipTheSlotAnimation;
+        ImageView flipper;
+        for (MatchBoardSlot slotToFlip: slotsToUpdate) {
+            flipper = imageViewBoard[slotToFlip.getBoardPositionRow()][slotToFlip.getBoardPositionColumn()];
+            if (turn == Color.Black)
+                flipper.setImageResource(R.drawable.white_to_black_flip);
+            else
+                flipper.setImageResource(R.drawable.black_to_white_flip);
+            flipTheSlotAnimation = (AnimationDrawable) flipper.getDrawable();
+            flipTheSlotAnimation.start();
+        }
+    }
 
 }
